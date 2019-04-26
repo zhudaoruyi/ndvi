@@ -128,9 +128,9 @@ def image_intersection(nir_dir, vis_dir, nir_transform_dir, vis_transform_dir):
     log.info("NIR band transform array is {}".format(nir_transform))
 
     gre_img = cv2.imread(vis_dir, 0)  # grey
-    log.info("vis band image shape".format(gre_img.shape[:2]))
+    log.info("vis band image shape is {}".format(gre_img.shape[:2]))
     nir_img = cv2.imread(nir_dir, 0)  # grey
-    log.info("NIR band image shape".format(nir_img.shape[:2]))
+    log.info("NIR band image shape is {}".format(nir_img.shape[:2]))
 
     ulx, uly, drx, dry = geo_intersection(gre_transform, nir_transform, gre_img.shape, nir_img.shape)
 
@@ -146,16 +146,16 @@ def image_intersection(nir_dir, vis_dir, nir_transform_dir, vis_transform_dir):
                        max(0, col_l_gre):min(gre_img.shape[1], col_r_gre)]
     nir_intersection = nir_img[max(0, row_l_nir):min(nir_img.shape[0], row_r_nir),
                        max(0, col_l_nir):min(nir_img.shape[1], col_r_nir)]
-    log.info("vis image intersection shape is".format(gre_intersection.shape))
-    log.info("NIR image intersection shape is".format(nir_intersection.shape))
+    log.info("vis image intersection shape is {}".format(gre_intersection.shape))
+    log.info("NIR image intersection shape is {}".format(nir_intersection.shape))
 
     # keep the same image size
     resize_ratio = gre_transform[0] / nir_transform[0]
     # if nir_transform[0] > gre_transform[0]:  # 则nir shape < gre shape，GSD(m/pixel)越大，同一个地块(地理坐标一样)，分辨率(尺寸)就越小
     gre_intersection = cv2.resize(gre_intersection,
                                   (int(gre_intersection.shape[1] * resize_ratio), int(gre_intersection.shape[0] * resize_ratio)))
-    log.info("vis image intersection shape is".format(gre_intersection.shape))
-    log.info("NIR image intersection shape is".format(nir_intersection.shape))
+    log.info("vis image intersection shape is {}".format(gre_intersection.shape))
+    log.info("NIR image intersection shape is {}".format(nir_intersection.shape))
 
     gre_intersection = gre_intersection[:min(gre_intersection.shape[0], nir_intersection.shape[0]),
                        :min(gre_intersection.shape[1], nir_intersection.shape[1])]
@@ -164,12 +164,12 @@ def image_intersection(nir_dir, vis_dir, nir_transform_dir, vis_transform_dir):
 
     assert gre_intersection.shape == nir_intersection.shape
 
-    log.info("intersection image shape is".format(nir_intersection.shape))
+    log.info("intersection image shape is {}".format(nir_intersection.shape))
     return nir_intersection, gre_intersection
 
 
 def plot_and_save(image, save_name="ndvi.png"):
-    plt.figure(figsize=(10, 10))
+    plt.figure(figsize=(100, 100))
     # plt.imshow(image, cmap='jet', vmin=-1., vmax=1.)
     plt.imshow(image, cmap='jet', vmin=np.min(image), vmax=np.max(image))
     plt.colorbar(orientation="vertical")
