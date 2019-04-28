@@ -103,8 +103,8 @@ def calc_rvi(nir, vis):
     :return: An array that will be exported as a tif
     """
 
-    passer = np.logical_and(vis > 1, nir >= 0)
-    return np.where(passer, (1. * nir) / (1. * vis), 40.)
+    passer = np.logical_and(nir > 1, vis >= 0)
+    return np.where(passer, (1. * vis) / (1. * nir), 1.)
 
 
 def image_intersection(nir_dir, vis_dir, nir_transform_dir, vis_transform_dir):
@@ -205,6 +205,7 @@ def main():
     if opt.pattern == "rvi":
         rvi_image = calc_rvi(nir_image, vis_image)
         log.info("RVI image max value is {}, min value is {}".format(np.max(rvi_image), np.min(rvi_image)))
+        rvi_image[rvi_image>1] = 1
         plot_and_save(rvi_image, opt.save_name)
     else:
         ndvi_image = calc_ndvi(nir_image, vis_image)
